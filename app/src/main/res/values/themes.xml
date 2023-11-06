@@ -1,0 +1,16 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.EIOSApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">#616161</item>
+        <item name="colorPrimaryDark">#616161</item>
+        <item name="colorAccent">#616161</item>
+        <item name="android:statusBarColor">#616161</item>
+        <item name="android:navigationBarColor">#080A0D</item>
+    </style>
+<style name="dialoganimation">
+    <item name="android:windowEnterAnimation">@anim/slideup</item>
+    <item name="android:windowExitAnimation">@anim/slidedown</item>
+</style>
+    <style name="Theme.EIOSApp" parent="Base.Theme.EIOSApp" />
+</resources>
