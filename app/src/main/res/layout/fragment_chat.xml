@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background = "@drawable/_667202530_3_18"
-    tools:context=".marks">
+    tools:context=".LayoutsScripts.marks">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

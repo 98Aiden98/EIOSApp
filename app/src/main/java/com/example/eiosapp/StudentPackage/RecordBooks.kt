@@ -1,4 +1,4 @@
-package com.example.eiosapp
+package com.example.eiosapp.StudentPackage
 
 import com.google.gson.annotations.SerializedName
 

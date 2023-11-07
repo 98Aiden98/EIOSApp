@@ -26,12 +26,7 @@
         </intent-filter>
         </activity>
         <activity
-            android:name=".bottom_nenu"
-            android:exported="false">
-
-        </activity>
-        <activity
-            android:name=".MainActivity3"
+            android:name=".LayoutsScripts.bottom_nenu"
             android:exported="false">
 
         </activity>

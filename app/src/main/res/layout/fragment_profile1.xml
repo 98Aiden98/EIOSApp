@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background = "@drawable/_667202530_3_18"
-    tools:context=".profile1">
-
+    android:background="@drawable/_667202530_3_18"
+    tools:context=".LayoutsScripts.profile1">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -89,9 +88,9 @@
         android:layout_width="203dp"
         android:layout_height="203dp"
         android:layout_marginTop="50dp"
-        app:cardCornerRadius="20dp"
-        android:padding="9.5dp"
         android:background="@drawable/profile_photo"
+        android:padding="9.5dp"
+        app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toTopOf="@+id/Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -103,9 +102,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/profile_photo"
-            android:src="@drawable/noavatar"
             android:clipToOutline="true"
             android:scaleType="centerCrop"
+            android:src="@drawable/noavatar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -156,4 +155,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

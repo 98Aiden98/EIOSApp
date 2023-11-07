@@ -1,8 +1,10 @@
-package com.example.eiosapp
+package com.example.eiosapp.LayoutsScripts
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.eiosapp.R
+import com.example.eiosapp.TokenPackage.SharedPrefManager
 import com.example.eiosapp.databinding.ActivityBottomNenuBinding
 
 class bottom_nenu : AppCompatActivity() {
@@ -15,7 +17,7 @@ class bottom_nenu : AppCompatActivity() {
         //setContentView(R.layout.fragment_profile1)
         setContentView(binding.root)
         replaceFragment(profile1())
-        SharedPrefManager.refreshDataUsingRefreshToken(SharedPrefManager.getRefreshToken().toString())
+        SharedPrefManager.refreshDataUsingRefreshToken()
 
         binding.bottomNavigationView.setOnItemSelectedListener {
 

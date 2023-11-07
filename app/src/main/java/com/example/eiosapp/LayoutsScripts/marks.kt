@@ -1,4 +1,4 @@
-package com.example.eiosapp
+package com.example.eiosapp.LayoutsScripts
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import com.example.eiosapp.R
+import com.example.eiosapp.TokenPackage.SharedPrefManager
 
 
 // TODO: Rename parameter arguments, choose names that match

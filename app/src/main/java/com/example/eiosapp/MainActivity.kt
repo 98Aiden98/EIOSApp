@@ -8,6 +8,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.eiosapp.LayoutsScripts.bottom_nenu
+import com.example.eiosapp.TokenPackage.MrsuInterfaceApi
+import com.example.eiosapp.TokenPackage.SharedPrefManager
+import com.example.eiosapp.TokenPackage.Token
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,6 +19,9 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         username = findViewById(R.id.login)
         password = findViewById(R.id.password)
         loginButton = findViewById(R.id.LogButton)
+
 
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -69,8 +77,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleTokenResponse(userToken: Token, sharedPrefManager: SharedPrefManager, userApi: MrsuInterfaceApi) {
         if (userToken.accessToken != null) {
-            Log.d("old_token",userToken.accessToken.toString() )
-            sharedPrefManager.saveTokens(userToken.accessToken, userToken.refreshToken)
+            sharedPrefManager.saveToken(userToken)
+            val asd = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val user = userApi.getUser("Bearer ${userToken.accessToken}")
@@ -79,6 +87,8 @@ class MainActivity : AppCompatActivity() {
                     sharedPrefManager.saveStudentData(student)
                     val studentsemester = userApi.getStudentSemester("Bearer ${userToken.accessToken}")
                     sharedPrefManager.saveStudentSemester(studentsemester)
+                    val studenttimetable = userApi.getStudentTimeTable("Bearer ${userToken.accessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
+                    sharedPrefManager.saveStudentTimeTable(studenttimetable)
                     runOnUiThread {
                         performActionsAfterAuthentication()
                     }

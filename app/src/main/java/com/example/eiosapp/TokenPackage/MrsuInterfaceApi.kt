@@ -1,10 +1,15 @@
-package com.example.eiosapp
+package com.example.eiosapp.TokenPackage
 
+import com.example.eiosapp.StudentPackage.Student
+import com.example.eiosapp.StudentSemesterPackage.StudentSemester
+import com.example.eiosapp.TimeTablePackage.StudentTimeTable
+import com.example.eiosapp.UserPackage.User
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface MrsuInterfaceApi {
     @GET("v1/User")
@@ -12,6 +17,12 @@ interface MrsuInterfaceApi {
 
     @GET("v1/StudentInfo")
     suspend fun getStudent(@Header("Authorization") authorization: String): Student
+
+    @GET("v1/StudentSemester?selector=current")
+    suspend fun getStudentSemester(@Header ("Authorization") authorization: String): StudentSemester
+
+    @GET ("v1/StudentTimeTable")
+    suspend fun getStudentTimeTable(@Header ("Authorization") authorization: String, @Query("date") date: String): List<StudentTimeTable>
 
     @FormUrlEncoded
     @POST("OAuth/Token")
@@ -31,8 +42,4 @@ interface MrsuInterfaceApi {
         @Field("client_id") clientId: String = "8",
         @Field("client_secret") clientSecret: String = "qweasd"
     ): Token
-
-    @GET("v1/StudentSemester?selector=current")
-    suspend fun getStudentSemester(@Header ("Authorization") authorization: String): StudentSemester
-
 }

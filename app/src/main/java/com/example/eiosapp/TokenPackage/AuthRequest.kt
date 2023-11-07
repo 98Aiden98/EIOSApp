@@ -1,4 +1,4 @@
-package com.example.eiosapp
+package com.example.eiosapp.TokenPackage
 
 import com.google.gson.annotations.SerializedName
 
