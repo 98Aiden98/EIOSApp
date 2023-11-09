@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.CalendarView
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -19,7 +20,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.eiosapp.R
 import com.example.eiosapp.TimeTablePackage.StudentTimeTable
 import com.example.eiosapp.TokenPackage.SharedPrefManager
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,7 +46,6 @@ class Schedule : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var materialCalendarView: MaterialCalendarView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -77,13 +76,19 @@ class Schedule : Fragment() {
         if (studentTimeTable != null) {
             createTimeTable(studentTimeTable)
         }
+        var calendar = Calendar.getInstance()
+        var dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
+        var formattedDate = dateFormat.format(calendar.time)
+        dateTV.text = formattedDate
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             tableLayout.removeAllViews()
-            val calendar = Calendar.getInstance()
+            calendar = Calendar.getInstance()
             calendar.set(year, month, dayOfMonth)
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
-            val formattedDate = dateFormat.format(calendar.time)
+            dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
+            formattedDate = dateFormat.format(calendar.time)
             dateTV.text = formattedDate
+            val loadingIndicator = view.findViewById<ProgressBar>(R.id.loadingIndicator)
+            loadingIndicator.visibility = View.VISIBLE
             CoroutineScope(Dispatchers.Main).launch {
 
                 val studentTimeTable: List<StudentTimeTable> = suspendCoroutine { continuation ->
@@ -95,6 +100,7 @@ class Schedule : Fragment() {
                 }
 
                 createTimeTable(studentTimeTable)
+                loadingIndicator.visibility = View.GONE
             }
 
 
@@ -135,15 +141,15 @@ class Schedule : Fragment() {
             "17:05 - 18:35",
             "18:40 - 20:10"
         )
-        studentTimeTable?.let { timeTableList ->
-            var prevGroupName = ""
+        studentTimeTable.let { timeTableList ->
+            val prevGroupName = ""
 
             for (studentTimeTable in timeTableList) {
                 val groupName = studentTimeTable.group
                 val timeTable = studentTimeTable.timeTable
                 if (groupName != prevGroupName) {
                     var lessonsCounter = 0
-                    for(i in lessonsCount.indices) {
+                    for(i in 0..<lessonsCount.size) {
                         val a = LinearLayout(context)
                         a.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                         a.setBackgroundResource(R.drawable.slidemenubutton)
@@ -159,49 +165,119 @@ class Schedule : Fragment() {
                         c.addView(lesNum)
                         c.id = i+1*4
                         a.id = i + 1 * 4
-                        val b = LinearLayout(context)
-                        b.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                        b.id = i+1*4
-                        b.orientation = LinearLayout.HORIZONTAL
-                        val d = LinearLayout(context)
-                        d.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                        d.orientation = LinearLayout.HORIZONTAL
-                        d.setPadding(20, 20, 20, 20)
-                        val e = LinearLayout(context)
-                        e.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                        e.orientation = LinearLayout.VERTICAL
-                        e.gravity = Gravity.CENTER_VERTICAL
+                        a.addView(c)
                         if(lessonsCounter < timeTable.lessons.size) {
                             if ((i + 1).toByte() == timeTable.lessons[lessonsCounter].number) {
-                                val photoimageview = ImageView(context)
-                                d.addView(photoimageview)
-                                val TeacherPhoto =
-                                    timeTable.lessons[lessonsCounter].disciplines[0].teacher.photo.urlSmall
-                                val LessonTitle = TextView(context)
-                                LessonTitle.setTextColor(Color.WHITE)
-                                LessonTitle.text = timeTable.lessons[lessonsCounter].disciplines[0].title
-                                val TeacherName = TextView(context)
-                                TeacherName.setTextColor(Color.WHITE)
-                                TeacherName.text = timeTable.lessons[lessonsCounter].disciplines[0].teacher.name
-                                val Classroom = TextView(context)
-                                Classroom.text = "Аудитория ${timeTable.lessons[lessonsCounter].disciplines[0].auditorium.number}. корп. ${timeTable.lessons[lessonsCounter].disciplines[0].auditorium.campustitle}"
-                                Classroom.setTextColor(Color.WHITE)
-                                Glide.with(this)
-                                .load(TeacherPhoto)
-                                .transform(CenterCrop(), RoundedCorners(80))
-                                .apply(RequestOptions().override(160, 160))
-                                .into(photoimageview)
-
-                                e.addView(LessonTitle)
-                                e.addView(TeacherName)
-                                e.addView(Classroom)
+                                val subGroupCount = timeTable.lessons[lessonsCounter].subgroupCount.toInt()
+                                val b = LinearLayout(context)
+                                b.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
+                                b.id = i+1*4
+                                b.orientation = LinearLayout.VERTICAL
+                                if(subGroupCount != 0) {
+                                    for (j in 0..<subGroupCount) {
+                                        val f = LinearLayout(context)
+                                        f.layoutParams = LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                                            LinearLayout.LayoutParams.MATCH_PARENT
+                                        )
+                                        f.orientation = LinearLayout.HORIZONTAL
+                                        val d = LinearLayout(context)
+                                        d.layoutParams = LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                                            LinearLayout.LayoutParams.WRAP_CONTENT
+                                        )
+                                        d.orientation = LinearLayout.HORIZONTAL
+                                        d.setPadding(20, 20, 20, 20)
+                                        val e = LinearLayout(context)
+                                        e.layoutParams = LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                                            LinearLayout.LayoutParams.WRAP_CONTENT
+                                        )
+                                        e.orientation = LinearLayout.VERTICAL
+                                        e.gravity = Gravity.CENTER_VERTICAL
+                                        e.setPadding(10, 10, 10, 10)
+                                        val photoimageview = ImageView(context)
+                                        d.addView(photoimageview)
+                                        val TeacherPhoto =
+                                            timeTable.lessons[lessonsCounter].disciplines[j].teacher.photo.urlSmall
+                                        val LessonTitle = TextView(context)
+                                        LessonTitle.setTextColor(Color.WHITE)
+                                        LessonTitle.text =
+                                            timeTable.lessons[lessonsCounter].disciplines[j].title
+                                        val TeacherName = TextView(context)
+                                        TeacherName.setTextColor(Color.WHITE)
+                                        TeacherName.text =
+                                            timeTable.lessons[lessonsCounter].disciplines[j].teacher.name
+                                        val Classroom = TextView(context)
+                                        Classroom.text =
+                                            "Аудитория ${timeTable.lessons[lessonsCounter].disciplines[j].auditorium.number}. корп. ${timeTable.lessons[lessonsCounter].disciplines[j].auditorium.campustitle}"
+                                        Classroom.setTextColor(Color.WHITE)
+                                        e.addView(LessonTitle)
+                                        e.addView(TeacherName)
+                                        e.addView(Classroom)
+                                        val SubGroup = TextView(context)
+                                        SubGroup.text =
+                                            "Подгруппа ${timeTable.lessons[lessonsCounter].disciplines[j].subgroupNumber}"
+                                        SubGroup.setTextColor(Color.WHITE)
+                                        e.addView(SubGroup)
+                                        Glide.with(this)
+                                            .load(TeacherPhoto)
+                                            .transform(CenterCrop(), RoundedCorners(50))
+                                            .apply(RequestOptions().override(100, 100))
+                                            .into(photoimageview)
+                                        f.addView(d)
+                                        f.addView(e)
+                                        b.addView(f)
+                                    }
+                                }
+                                else {
+                                    b.orientation = LinearLayout.HORIZONTAL
+                                    val d = LinearLayout(context)
+                                    d.layoutParams = LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                    )
+                                    d.orientation = LinearLayout.HORIZONTAL
+                                    d.setPadding(20, 20, 20, 20)
+                                    val e = LinearLayout(context)
+                                    e.layoutParams = LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                    )
+                                    e.orientation = LinearLayout.VERTICAL
+                                    e.gravity = Gravity.CENTER_VERTICAL
+                                    e.setPadding(10, 10, 10, 10)
+                                    val photoimageview = ImageView(context)
+                                    d.addView(photoimageview)
+                                    val TeacherPhoto =
+                                        timeTable.lessons[lessonsCounter].disciplines[0].teacher.photo.urlSmall
+                                    val LessonTitle = TextView(context)
+                                    LessonTitle.setTextColor(Color.WHITE)
+                                    LessonTitle.text =
+                                        timeTable.lessons[lessonsCounter].disciplines[0].title
+                                    val TeacherName = TextView(context)
+                                    TeacherName.setTextColor(Color.WHITE)
+                                    TeacherName.text =
+                                        timeTable.lessons[lessonsCounter].disciplines[0].teacher.name
+                                    val Classroom = TextView(context)
+                                    Classroom.text =
+                                        "Аудитория ${timeTable.lessons[lessonsCounter].disciplines[0].auditorium.number}. корп. ${timeTable.lessons[lessonsCounter].disciplines[0].auditorium.campustitle}"
+                                    Classroom.setTextColor(Color.WHITE)
+                                    e.addView(LessonTitle)
+                                    e.addView(TeacherName)
+                                    e.addView(Classroom)
+                                    Glide.with(this)
+                                        .load(TeacherPhoto)
+                                        .transform(CenterCrop(), RoundedCorners(80))
+                                        .apply(RequestOptions().override(160, 160))
+                                        .into(photoimageview)
+                                    b.addView(d)
+                                    b.addView(e)
+                                }
                                 lessonsCounter += 1
+                                a.addView(b)
                             }
                         }
-                        b.addView(d)
-                        b.addView(e)
-                        a.addView(c)
-                        a.addView(b)
                         tableLayout.addView(a)
                     }
                 }

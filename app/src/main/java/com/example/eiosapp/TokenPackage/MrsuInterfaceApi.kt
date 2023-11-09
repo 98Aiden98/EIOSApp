@@ -22,7 +22,10 @@ interface MrsuInterfaceApi {
     suspend fun getStudentSemester(@Header ("Authorization") authorization: String): StudentSemester
 
     @GET ("v1/StudentTimeTable")
-    suspend fun getStudentTimeTable(@Header ("Authorization") authorization: String, @Query("date") date: String): List<StudentTimeTable>
+    suspend fun getStudentTimeTable(
+        @Header ("Authorization") authorization: String,
+        @Query("date") date: String)
+    : List<StudentTimeTable>
 
     @FormUrlEncoded
     @POST("OAuth/Token")
