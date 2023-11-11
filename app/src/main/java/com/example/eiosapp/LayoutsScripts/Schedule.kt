@@ -34,7 +34,6 @@ import kotlin.coroutines.suspendCoroutine
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-private lateinit var dateTV: TextView
 private lateinit var calendarView: CalendarView
 private lateinit var tableLayout: LinearLayout
 /**
@@ -67,7 +66,6 @@ class Schedule : Fragment() {
         val configuration = resources.configuration
         configuration.locale = locale
         resources.updateConfiguration(configuration, resources.displayMetrics)
-        dateTV = view.findViewById(R.id.idTVDate)
         tableLayout = view.findViewById(R.id.timetable_tableLayout)
         tableLayout.orientation = LinearLayout.VERTICAL
         calendarView = view.findViewById(R.id.calendarView)
@@ -79,14 +77,12 @@ class Schedule : Fragment() {
         var calendar = Calendar.getInstance()
         var dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
         var formattedDate = dateFormat.format(calendar.time)
-        dateTV.text = formattedDate
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             tableLayout.removeAllViews()
             calendar = Calendar.getInstance()
             calendar.set(year, month, dayOfMonth)
             dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
             formattedDate = dateFormat.format(calendar.time)
-            dateTV.text = formattedDate
             val loadingIndicator = view.findViewById<ProgressBar>(R.id.loadingIndicator)
             loadingIndicator.visibility = View.VISIBLE
             CoroutineScope(Dispatchers.Main).launch {
@@ -143,7 +139,7 @@ class Schedule : Fragment() {
         )
         studentTimeTable.let { timeTableList ->
             val prevGroupName = ""
-
+            tableLayout.removeAllViews()
             for (studentTimeTable in timeTableList) {
                 val groupName = studentTimeTable.group
                 val timeTable = studentTimeTable.timeTable
@@ -207,7 +203,7 @@ class Schedule : Fragment() {
                                         val TeacherName = TextView(context)
                                         TeacherName.setTextColor(Color.WHITE)
                                         TeacherName.text =
-                                            timeTable.lessons[lessonsCounter].disciplines[j].teacher.name
+                                            timeTable.lessons[lessonsCounter].disciplines[j].teacher.fio
                                         val Classroom = TextView(context)
                                         Classroom.text =
                                             "Аудитория ${timeTable.lessons[lessonsCounter].disciplines[j].auditorium.number}. корп. ${timeTable.lessons[lessonsCounter].disciplines[j].auditorium.campustitle}"
@@ -258,7 +254,7 @@ class Schedule : Fragment() {
                                     val TeacherName = TextView(context)
                                     TeacherName.setTextColor(Color.WHITE)
                                     TeacherName.text =
-                                        timeTable.lessons[lessonsCounter].disciplines[0].teacher.name
+                                        timeTable.lessons[lessonsCounter].disciplines[0].teacher.fio
                                     val Classroom = TextView(context)
                                     Classroom.text =
                                         "Аудитория ${timeTable.lessons[lessonsCounter].disciplines[0].auditorium.number}. корп. ${timeTable.lessons[lessonsCounter].disciplines[0].auditorium.campustitle}"

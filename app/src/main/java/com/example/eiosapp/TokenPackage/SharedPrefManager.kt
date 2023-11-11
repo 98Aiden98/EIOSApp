@@ -1,7 +1,9 @@
 package com.example.eiosapp.TokenPackage
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.example.eiosapp.StudentPackage.Student
+import com.example.eiosapp.StudentRatingPlan.StudentRatingPlan
 import com.example.eiosapp.StudentSemesterPackage.StudentSemester
 import com.example.eiosapp.TimeTablePackage.StudentTimeTable
 import com.example.eiosapp.UserPackage.User
@@ -27,6 +29,7 @@ object SharedPrefManager {
     private const val USER_DATA = "user_data"
     private const val STUDENT_SEMESTER = "student_semester"
     private const val STUDENT_TIMETABLE = "student_timetable"
+    private const val STUDENT_RATINGPLAN = "student_ratingplan"
     private const val EXPIRATION_TIME = "expiration_time"
 
     private lateinit var sharedPreferences: SharedPreferences
@@ -108,9 +111,22 @@ object SharedPrefManager {
         }
     }
 
+    fun saveStudentRatingPlan(studentRatingPlan: StudentRatingPlan) {
+        val jsonStudentTimeTable = Gson().toJson(studentRatingPlan)
+        sharedPreferences.edit().apply {
+            putString(STUDENT_RATINGPLAN, jsonStudentTimeTable)
+            apply()
+        }
+    }
+
     fun getUserData(): User? {
         val jsonUserData = sharedPreferences.getString(USER_DATA, null)
         return Gson().fromJson(jsonUserData, User::class.java)
+    }
+
+    fun getStudentRatingPlan(param: (Any) -> Unit): StudentRatingPlan {
+        val jsonStudentSemester = sharedPreferences.getString(STUDENT_RATINGPLAN, null)
+        return Gson().fromJson(jsonStudentSemester, StudentRatingPlan::class.java)
     }
 
     fun getStudentSemester(): StudentSemester? {
@@ -137,6 +153,25 @@ object SharedPrefManager {
         return Gson().fromJson(jsonStudentData, Student::class.java)
     }
 
+    fun getRatingPlanUsingRefreshToken(disciplineid: Int, callback: (StudentRatingPlan) -> Unit) {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+                val refreshedStudentTimeTable = userApi.getStudentRatingPlan("Bearer ${getAccessToken()}", disciplineid)
+                saveStudentRatingPlan(refreshedStudentTimeTable)
+
+                callback(refreshedStudentTimeTable)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("error_global2", e.message.toString())
+                Log.e("error_local2", e.localizedMessage)
+            }
+        }
+    }
+
     fun refreshTimeTableDateUsingRefreshToken(date: String, callback: (List<StudentTimeTable>) -> Unit) {
         val BASE_URL_USER = "https://papi.mrsu.ru"
         val userApi = createRetrofitApi(BASE_URL_USER)
@@ -144,10 +179,10 @@ object SharedPrefManager {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 checkTokenExpiration()
-                val refreshedStudentTimeTable = userApi.getStudentTimeTable("Bearer ${getAccessToken()}", date)
-                saveStudentTimeTable(refreshedStudentTimeTable)
+                val refreshedStudentRatingPlan = userApi.getStudentTimeTable("Bearer ${getAccessToken()}", date)
+                saveStudentTimeTable(refreshedStudentRatingPlan)
 
-                callback(refreshedStudentTimeTable)
+                callback(refreshedStudentRatingPlan)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

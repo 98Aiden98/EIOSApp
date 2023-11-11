@@ -1,6 +1,7 @@
 package com.example.eiosapp.TokenPackage
 
 import com.example.eiosapp.StudentPackage.Student
+import com.example.eiosapp.StudentRatingPlan.StudentRatingPlan
 import com.example.eiosapp.StudentSemesterPackage.StudentSemester
 import com.example.eiosapp.TimeTablePackage.StudentTimeTable
 import com.example.eiosapp.UserPackage.User
@@ -20,6 +21,12 @@ interface MrsuInterfaceApi {
 
     @GET("v1/StudentSemester?selector=current")
     suspend fun getStudentSemester(@Header ("Authorization") authorization: String): StudentSemester
+
+    @GET("v1/StudentRatingPlan")
+    suspend fun getStudentRatingPlan(
+        @Header ("Authorization") authorization: String,
+        @Query ("id") id: Int)
+    : StudentRatingPlan
 
     @GET ("v1/StudentTimeTable")
     suspend fun getStudentTimeTable(

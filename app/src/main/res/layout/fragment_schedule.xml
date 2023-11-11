@@ -30,7 +30,7 @@
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@drawable/mainbutton"
         android:orientation="vertical">
 
@@ -47,18 +47,7 @@
 
         </CalendarView>
 
-        <TextView
-            android:id="@+id/idTVDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Дата"
-            android:translationY="-40dp"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/calendarView" />
-        <ProgressBar
+       <ProgressBar
             android:id="@+id/loadingIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,15 +67,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:gravity="center_horizontal"
+            android:paddingBottom="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/idTVDate"
+            app:layout_constraintTop_toBottomOf="@id/calendarView"
             android:orientation="horizontal">
         </LinearLayout>
 </ScrollView>
-
     </LinearLayout>
     </LinearLayout>
 </FrameLayout>

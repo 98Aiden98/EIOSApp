@@ -1,6 +1,7 @@
 package com.example.eiosapp.LayoutsScripts
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -55,6 +56,16 @@ class marks : Fragment() {
                 btnTag.text = title
                 btnTag.id = j + 1 * 4
                 layout.addView(btnTag)
+
+                btnTag.setOnClickListener{
+                    val disciplineid: String = SharedPrefManager.getStudentSemester()?.recordBooks?.get(0)?.discipline?.get(j)?.id.toString()
+                    val intent = Intent(context, rating_plan::class.java)
+                    intent.putExtra("disciplineid", disciplineid)
+                    intent.putExtra("title", title)
+                    startActivity(intent)
+                }
+
+
             }
 
         /*var layoutParams = LinearLayout.LayoutParams(

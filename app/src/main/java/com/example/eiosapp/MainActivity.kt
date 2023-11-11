@@ -78,17 +78,21 @@ class MainActivity : AppCompatActivity() {
     private fun handleTokenResponse(userToken: Token, sharedPrefManager: SharedPrefManager, userApi: MrsuInterfaceApi) {
         if (userToken.accessToken != null) {
             sharedPrefManager.saveToken(userToken)
-            val asd = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val user = userApi.getUser("Bearer ${userToken.accessToken}")
                     sharedPrefManager.saveUserData(user)
+
                     val student = userApi.getStudent("Bearer ${userToken.accessToken}")
                     sharedPrefManager.saveStudentData(student)
+
                     val studentsemester = userApi.getStudentSemester("Bearer ${userToken.accessToken}")
                     sharedPrefManager.saveStudentSemester(studentsemester)
+
                     val studenttimetable = userApi.getStudentTimeTable("Bearer ${userToken.accessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
                     sharedPrefManager.saveStudentTimeTable(studenttimetable)
+
                     runOnUiThread {
                         performActionsAfterAuthentication()
                     }

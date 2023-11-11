@@ -30,6 +30,11 @@
             android:exported="false">
 
         </activity>
+        <activity
+            android:name=".LayoutsScripts.rating_plan"
+            android:exported="false">
+
+        </activity>
     </application>
 
 </manifest>
