@@ -51,7 +51,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -60,9 +59,28 @@
             <LinearLayout
                 android:id="@+id/rating_plan_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/mainbutton"
-                android:orientation="vertical"></LinearLayout>
+                android:orientation="vertical"
+                android:gravity="center">
+                <ProgressBar
+                android:id="@+id/loadingIndicatorRatingPlan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:indeterminateDrawable="@drawable/progress_bar_custom_2"
+                />
+                <ImageView
+                    android:id="@+id/errorimage"
+                    android:layout_width="280dp"
+                    android:layout_height="280dp"
+                    android:visibility="gone"
+                    android:background="@drawable/error">
+
+                </ImageView>
+            </LinearLayout>
+
         </ScrollView>
         <LinearLayout
             android:id="@+id/rating_plan_total"

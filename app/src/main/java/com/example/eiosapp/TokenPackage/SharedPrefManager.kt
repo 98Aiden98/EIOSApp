@@ -22,6 +22,8 @@ import java.util.Date
 import java.util.Locale
 
 object SharedPrefManager {
+
+    //Ключи
     private const val PREF_NAME = "MyPrefs"
     private const val ACCESS_TOKEN = "access_token"
     private const val REFRESH_TOKEN = "refresh_token"
@@ -35,6 +37,7 @@ object SharedPrefManager {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var instance: SharedPrefManager
 
+    //Получение экземпляра
     fun getInstance(context: Context): SharedPrefManager {
         if (!this::instance.isInitialized) {
             instance = SharedPrefManager
@@ -43,6 +46,7 @@ object SharedPrefManager {
         return instance
     }
 
+    //Инициализация
     private fun init(context: Context) {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         val refreshToken = REFRESH_TOKEN
@@ -51,6 +55,7 @@ object SharedPrefManager {
         }
     }
 
+    //Обновление информации с помощью RefreshToken
     fun refreshDataUsingRefreshToken() {
         val BASE_URL_USER = "https://papi.mrsu.ru"
 
@@ -58,16 +63,21 @@ object SharedPrefManager {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                //Проверка истечения времени использования токена
                 checkTokenExpiration()
 
+                //Получение токена
                 val currentAccessToken = getAccessToken()
 
+                //Обновление данных пользователя
                 val refreshedUserData = userApi.getUser("Bearer ${currentAccessToken}")
                 saveUserData(refreshedUserData)
 
+                //Обновление данных студента
                 val refreshedStudentData = userApi.getStudent("Bearer ${currentAccessToken}")
                 saveStudentData(refreshedStudentData)
 
+                //Обновление расписания студента
                 val studentTimeTable = userApi.getStudentTimeTable("Bearer ${currentAccessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
                 saveStudentTimeTable(studentTimeTable)
 
@@ -153,6 +163,7 @@ object SharedPrefManager {
         return Gson().fromJson(jsonStudentData, Student::class.java)
     }
 
+    //Получение рейтинг плана с помощью RefreshToken
     fun getRatingPlanUsingRefreshToken(disciplineid: Int, callback: (StudentRatingPlan) -> Unit) {
         val BASE_URL_USER = "https://papi.mrsu.ru"
         val userApi = createRetrofitApi(BASE_URL_USER)
@@ -166,12 +177,14 @@ object SharedPrefManager {
                 callback(refreshedStudentTimeTable)
             } catch (e: Exception) {
                 e.printStackTrace()
+
                 Log.e("error_global2", e.message.toString())
                 Log.e("error_local2", e.localizedMessage)
             }
         }
     }
 
+    //Обновление расписания с помощью RefreshToken
     fun refreshTimeTableDateUsingRefreshToken(date: String, callback: (List<StudentTimeTable>) -> Unit) {
         val BASE_URL_USER = "https://papi.mrsu.ru"
         val userApi = createRetrofitApi(BASE_URL_USER)
@@ -204,6 +217,8 @@ object SharedPrefManager {
     fun clearData() {
         sharedPreferences.edit().clear().apply()
     }
+
+    //Создание клиента
     private fun createRetrofitApi(baseUrl: String): MrsuInterfaceApi {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -220,6 +235,7 @@ object SharedPrefManager {
         return retrofit.create(MrsuInterfaceApi::class.java)
     }
 
+    //Проверка на истечение времени использования токена
     private fun isAccessTokenExpired(): Boolean {
         val currentTime = System.currentTimeMillis()
 

@@ -48,9 +48,11 @@ class MainActivity : AppCompatActivity() {
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
 
+        //Получение API
         val tokenApi = createRetrofitClient(BASE_URL_TOKEN).create(MrsuInterfaceApi::class.java)
         val userApi = createRetrofitClient(BASE_URL_USER).create(MrsuInterfaceApi::class.java)
 
+        //При нажатии на кнопку 'Войти'
         loginButton.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
@@ -67,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //Обработчик ошибки при входе
     private fun handleTokenFailure(throwable: Throwable) {
         Log.e("error_global", throwable.message.toString())
         Log.e("error_local", throwable.localizedMessage)
@@ -81,15 +84,20 @@ class MainActivity : AppCompatActivity() {
             SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
             CoroutineScope(Dispatchers.IO).launch {
                 try {
+
+                    //Получение информации о пользователе
                     val user = userApi.getUser("Bearer ${userToken.accessToken}")
                     sharedPrefManager.saveUserData(user)
 
+                    //Получение информации о студенте
                     val student = userApi.getStudent("Bearer ${userToken.accessToken}")
                     sharedPrefManager.saveStudentData(student)
 
+                    //Получение информации о дисциплинах студента
                     val studentsemester = userApi.getStudentSemester("Bearer ${userToken.accessToken}")
                     sharedPrefManager.saveStudentSemester(studentsemester)
 
+                    //Получение информации о расписании студента
                     val studenttimetable = userApi.getStudentTimeTable("Bearer ${userToken.accessToken}", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
                     sharedPrefManager.saveStudentTimeTable(studenttimetable)
 
@@ -111,11 +119,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //Переход между окнами
     private fun performActionsAfterAuthentication() {
         val intent = Intent(this@MainActivity, bottom_nenu::class.java)
         startActivity(intent)
     }
 
+    //Создание клиента
     private fun createRetrofitClient(baseUrl: String): Retrofit {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -130,27 +140,5 @@ class MainActivity : AppCompatActivity() {
     private fun showErrorToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-//    private fun GetUserData() {
-//
-//        val api = Retrofit.Builder()
-//            .baseUrl(BaseUrl)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build()
-//            .create(MyApi::class.java)
-//
-//        api.getUserData().enqueue(object : Callback<User> {
-//            override fun onResponse(call: Call<User>, response: Response<User>) {
-//                if(response.isSuccessful){
-//                    response.body()?.let{
-//                            Log.i(TAG,"onResponse: ${response}")
-//                        }
-//                    }
-//                }
-//
-//            override fun onFailure(call: Call<User>, t: Throwable) {
-//                Log.i(TAG,"onFailure: Ошибка")
-//            }
-//        })
-//    }
 }
 

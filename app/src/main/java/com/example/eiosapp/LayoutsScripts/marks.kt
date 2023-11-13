@@ -2,12 +2,15 @@ package com.example.eiosapp.LayoutsScripts
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.eiosapp.R
 import com.example.eiosapp.TokenPackage.SharedPrefManager
@@ -43,51 +46,58 @@ class marks : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_marks, container, false)
-        val count: Int = SharedPrefManager.getStudentSemester()?.recordBooks?.get(0)?.discipline?.size!!
         val layout = view.findViewById(R.id.MarksLayout) as LinearLayout
-        layout.orientation =
-            LinearLayout.VERTICAL
+        layout.orientation = LinearLayout.VERTICAL
+
+        // Цикл по количеству факультетов
+        // (У кого-то кроме своего факультета могут быть доп. пары с другого факультета. Например, УМУ)
+        for(k in 0..<SharedPrefManager.getStudentSemester()?.recordBooks?.size!! ) {
+            val title = SharedPrefManager.getStudentSemester()?.recordBooks?.get(k)?.faculty // Название факультета
+            val titleTextView = TextView(context)
+            titleTextView.text = title
+            titleTextView.setTextColor(Color.WHITE)
+
+            // Контейнер, содержащий заголовок факультета
+            val titleLayout = LinearLayout(context)
+            titleLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            titleLayout.setBackgroundResource(R.drawable.rating_plan_section_style)
+            titleLayout.orientation = LinearLayout.HORIZONTAL
+            titleLayout.setPadding(20,10,10,10)
+            titleLayout.gravity = Gravity.CENTER
+            titleLayout.addView(titleTextView)
+            layout.addView(titleLayout)
+
+            val count: Int =
+                SharedPrefManager.getStudentSemester()?.recordBooks?.get(k)?.discipline?.size!! // Количество дисциплин
             for (j in 0..<count) {
-                val title: String = SharedPrefManager.getStudentSemester()?.recordBooks?.get(0)?.discipline?.get(j)?.title.toString()
+                // Название дисциплины
+                val title: String = SharedPrefManager.getStudentSemester()?.recordBooks?.get(k)?.discipline?.get(j)?.title.toString()
+
                 val btnTag = Button(context)
                 btnTag.layoutParams =
-                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
                 btnTag.setBackgroundResource(R.drawable.slidemenubutton)
                 btnTag.text = title
                 btnTag.id = j + 1 * 4
                 layout.addView(btnTag)
 
-                btnTag.setOnClickListener{
-                    val disciplineid: String = SharedPrefManager.getStudentSemester()?.recordBooks?.get(0)?.discipline?.get(j)?.id.toString()
+                // При нажатии на кнопку открывать рейтинг-план по выбранной дисциплине
+                btnTag.setOnClickListener {
+                    val disciplineid: String = SharedPrefManager.
+                    getStudentSemester()?.recordBooks?.get(0)?.discipline?.get(j)?.id.toString()
+
                     val intent = Intent(context, rating_plan::class.java)
-                    intent.putExtra("disciplineid", disciplineid)
-                    intent.putExtra("title", title)
+                    intent.putExtra("disciplineid", disciplineid) // Передача id дисциплины в файл Rating_plan
+                    intent.putExtra("title", title) // Передача названия дисциплины в файл Rating_plan
                     startActivity(intent)
                 }
 
 
             }
-
-        /*var layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-        )
-        val layout = view.findViewById(R.id.MarksLayout) as LinearLayout
-        layout.orientation = LinearLayout.VERTICAL;
-        layoutParams.setMargins(0, 24, 0, 24);
-        val a = LinearLayout(context)
-        for(i in 0..<count){
-            val title: String = SharedPrefManager.getStudentSemester()?.recordBooks?.get(0)?.discipline?.get(i)?.title.toString()
-            val b = Button(context)
-            // Создаем параметры расположения и отступов для кнопок
-            b.layoutParams = layoutParams
-            b.setTextColor(Color.WHITE)
-            b.setBackgroundResource(R.drawable.slidemenubutton)
-            b.text = title
-            b.id = i
-            a.addView(b)
         }
-        layout.addView(a)*/
         return view
     }
 

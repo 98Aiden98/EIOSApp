@@ -6,6 +6,10 @@
     android:layout_height="match_parent"
     android:background = "@drawable/_667202530_3_18"
     tools:context=".LayoutsScripts.marks">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,9 +30,8 @@
     <!-- TODO: Update blank fragment layout -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="550dp"
+        android:layout_height="match_parent"
         android:background="@drawable/mainbutton"
-        android:translationY="100dp"
         android:fillViewport="true"
         >
         <LinearLayout
@@ -41,4 +44,5 @@
 
         </LinearLayout>
     </ScrollView>
+    </LinearLayout>
 </FrameLayout>

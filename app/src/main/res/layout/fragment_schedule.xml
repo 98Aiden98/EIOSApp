@@ -58,16 +58,14 @@
 <ScrollView
     android:id="@+id/scrolltimetable"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:fillViewport="true"
-    android:translationY="-40dp">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
         <LinearLayout
             android:id="@+id/timetable_tableLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="4dp"
             android:gravity="center_horizontal"
-            android:paddingBottom="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

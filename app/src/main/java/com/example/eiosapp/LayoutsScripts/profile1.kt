@@ -42,15 +42,16 @@ class profile1 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        SharedPrefManager.refreshDataUsingRefreshToken()
+        SharedPrefManager.refreshDataUsingRefreshToken() // Обновление токена
         val view: View = inflater.inflate(R.layout.fragment_profile1, container, false)
-        val name: TextView = view.findViewById(R.id.Name)
-        val studentIDTextView: TextView = view.findViewById(R.id.ID)
-        val profilePictureImageView: ImageView = view.findViewById(R.id.ProfilePhoto)
+        val name: TextView = view.findViewById(R.id.Name) // Имя
+        val studentIDTextView: TextView = view.findViewById(R.id.ID) // ID
+        val profilePictureImageView: ImageView = view.findViewById(R.id.ProfilePhoto) // Ссылка на фото
         name.text = SharedPrefManager.getUserData()?.fio
         studentIDTextView.text = "ID: ${SharedPrefManager.getUserData()?.studentCod}"
         val profilePhotoUrl = SharedPrefManager.getUserData()?.photo?.urlMedium
 
+        //Загрузка фото
         Glide.with(this)
             .load(profilePhotoUrl)
             .placeholder(R.drawable.noavatar)
