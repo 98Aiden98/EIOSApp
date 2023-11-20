@@ -27,7 +27,6 @@ class profile1 : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -57,9 +56,9 @@ class profile1 : Fragment() {
             .placeholder(R.drawable.noavatar)
             .transform(CenterCrop(), RoundedCorners(40))
             .into(profilePictureImageView)
+
         return view
     }
-
     companion object {
         /**
          * Use this factory method to create a new instance of

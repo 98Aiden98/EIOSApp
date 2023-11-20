@@ -17,7 +17,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/parentRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+       <!-- <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button1"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -83,7 +90,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button3">
 
-        </androidx.appcompat.widget.AppCompatButton>
+        </androidx.appcompat.widget.AppCompatButton>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -92,10 +99,9 @@
         android:id="@+id/linearLayout3"
         android:layout_width="203dp"
         android:layout_height="203dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/profile_photo"
-        android:padding="9.5dp"
-        app:cardCornerRadius="20dp"
+        android:padding="9dp"
         app:layout_constraintBottom_toTopOf="@+id/Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -107,7 +113,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/profile_photo"
-            android:clipToOutline="true"
             android:scaleType="centerCrop"
             android:src="@drawable/noavatar"
             app:layout_constraintBottom_toBottomOf="parent"

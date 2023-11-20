@@ -1,5 +1,6 @@
 package com.example.eiosapp
 
+import UserManager
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -8,12 +9,14 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.asLiveData
 import com.example.eiosapp.LayoutsScripts.bottom_nenu
 import com.example.eiosapp.TokenPackage.MrsuInterfaceApi
 import com.example.eiosapp.TokenPackage.SharedPrefManager
 import com.example.eiosapp.TokenPackage.Token
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -31,27 +34,38 @@ class MainActivity : AppCompatActivity() {
     private lateinit var loginButton: Button
     private val BASE_URL_TOKEN = "https://p.mrsu.ru"
     private val BASE_URL_USER = "https://papi.mrsu.ru"
+    lateinit var userManager: UserManager
+    private var pass = ""
+    private var name = ""
+    //Получение API
+    val tokenApi = createRetrofitClient(BASE_URL_TOKEN).create(MrsuInterfaceApi::class.java)
+    val userApi = createRetrofitClient(BASE_URL_USER).create(MrsuInterfaceApi::class.java)
+
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         val sharedPrefManager = SharedPrefManager.getInstance(this)
 
         username = findViewById(R.id.login)
         password = findViewById(R.id.password)
         loginButton = findViewById(R.id.LogButton)
 
-
+        userManager = UserManager(this)
+        observeData()
+        val d = password.getText().toString()
+        val p = username.getText().toString()
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
 
-        //Получение API
-        val tokenApi = createRetrofitClient(BASE_URL_TOKEN).create(MrsuInterfaceApi::class.java)
-        val userApi = createRetrofitClient(BASE_URL_USER).create(MrsuInterfaceApi::class.java)
+        if(username.text.toString() != "" && password.text.toString() != "")
+        {
 
+        }
+        val h = username.text
+        val g = password.text
         //При нажатии на кнопку 'Войти'
         loginButton.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
@@ -61,6 +75,9 @@ class MainActivity : AppCompatActivity() {
                         password = password.text.toString()
                     )
                     handleTokenResponse(userToken, sharedPrefManager, userApi)
+                    GlobalScope.launch {
+                        userManager.storeUser(password.text.toString(), username.text.toString())
+                    }
                 } catch (e: Exception) {
                     handleTokenFailure(e)
                     Log.d("getUserToken_error", e.message.toString())
@@ -68,6 +85,27 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun observeData() {
+        // Updates age
+        // every time user age changes it will be observed by userAgeFlow
+        // here it refers to the value returned from the userAgeFlow function
+        // of UserManager class
+        this.userManager.userAgeFlow.asLiveData().observe(this) {
+            pass = it.toString()
+            password.setText(it.toString())
+        }
+
+        // Updates name
+        // every time user name changes it will be observed by userNameFlow
+        // here it refers to the value returned from the usernameFlow function
+        // of UserManager class
+        this.userManager.userNameFlow.asLiveData().observe(this) {
+            name = it.toString()
+            username.setText(it.toString())
+        }
+    }
+
 
     //Обработчик ошибки при входе
     private fun handleTokenFailure(throwable: Throwable) {

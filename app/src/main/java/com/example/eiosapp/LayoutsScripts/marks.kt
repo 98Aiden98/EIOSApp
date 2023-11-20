@@ -87,7 +87,7 @@ class marks : Fragment() {
                 // При нажатии на кнопку открывать рейтинг-план по выбранной дисциплине
                 btnTag.setOnClickListener {
                     val disciplineid: String = SharedPrefManager.
-                    getStudentSemester()?.recordBooks?.get(0)?.discipline?.get(j)?.id.toString()
+                    getStudentSemester()?.recordBooks?.get(k)?.discipline?.get(j)?.id.toString()
 
                     val intent = Intent(context, rating_plan::class.java)
                     intent.putExtra("disciplineid", disciplineid) // Передача id дисциплины в файл Rating_plan
