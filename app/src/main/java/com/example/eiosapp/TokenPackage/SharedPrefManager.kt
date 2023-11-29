@@ -2,6 +2,7 @@ package com.example.eiosapp.TokenPackage
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import com.example.eiosapp.MessagerPackage.ForumMessage
 import com.example.eiosapp.StudentPackage.Student
 import com.example.eiosapp.StudentRatingPlan.StudentRatingPlan
 import com.example.eiosapp.StudentSemesterPackage.StudentSemester
@@ -32,6 +33,7 @@ object SharedPrefManager {
     private const val STUDENT_SEMESTER = "student_semester"
     private const val STUDENT_TIMETABLE = "student_timetable"
     private const val STUDENT_RATINGPLAN = "student_ratingplan"
+    private const val FORUM_MESSAGE = "forum_message"
     private const val EXPIRATION_TIME = "expiration_time"
 
     private lateinit var sharedPreferences: SharedPreferences
@@ -121,6 +123,14 @@ object SharedPrefManager {
         }
     }
 
+    fun saveForumMessage(forumMessage: List<ForumMessage>) {
+        val jsonStudentTimeTable = Gson().toJson(forumMessage)
+        sharedPreferences.edit().apply {
+            putString(FORUM_MESSAGE, jsonStudentTimeTable)
+            apply()
+        }
+    }
+
     fun saveStudentRatingPlan(studentRatingPlan: StudentRatingPlan) {
         val jsonStudentTimeTable = Gson().toJson(studentRatingPlan)
         sharedPreferences.edit().apply {
@@ -161,6 +171,63 @@ object SharedPrefManager {
     fun getStudentData(): Student? {
         val jsonStudentData = sharedPreferences.getString(STUDENT_DATA, null)
         return Gson().fromJson(jsonStudentData, Student::class.java)
+    }
+
+    fun deleteForumMessage(id: Int, callback: (Unit) -> Unit) {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+                val deletedMessage = userApi.deleteForumMessage("Bearer ${getAccessToken()}",id)
+
+                callback(deletedMessage)
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+                Log.e("error_global2", e.message.toString())
+                Log.e("error_local2", e.localizedMessage)
+            }
+        }
+    }
+
+    fun sendForumMessageUsingRefreshToken(text: String, disciplineid: Int, callback: (ForumMessage) -> Unit) {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+                val sendForumMessage = userApi.sendForumMessage("Bearer ${getAccessToken()}",disciplineid,text)
+
+                callback(sendForumMessage)
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+                Log.e("error_global2", e.message.toString())
+                Log.e("error_local2", e.localizedMessage)
+            }
+        }
+    }
+
+    fun getForumMessageUsingRefreshToken(disciplineid: Int, callback: (List<ForumMessage>) -> Unit) {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+                val refreshedForumMessage = userApi.getForumMessage("Bearer ${getAccessToken()}", disciplineid)
+                saveForumMessage(refreshedForumMessage)
+
+                callback(refreshedForumMessage)
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+                Log.e("error_global2", e.message.toString())
+                Log.e("error_local2", e.localizedMessage)
+            }
+        }
     }
 
     //Получение рейтинг плана с помощью RefreshToken

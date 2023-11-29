@@ -6,44 +6,43 @@
     android:layout_height="match_parent"
     android:background = "@drawable/_667202530_3_18"
     tools:context=".LayoutsScripts.marks">
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/schedilestroke"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Общение"
-            android:textColor="@color/white"
-            android:textSize="40sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- TODO: Update blank fragment layout -->
-    <ScrollView
-        android:clipToOutline="true"
-        android:layout_width="match_parent"
-        android:layout_height="550dp"
-        android:background="@drawable/mainbutton"
-        android:translationY="100dp"
-        android:fillViewport="true"
-        >
-        <LinearLayout
-            android:showDividers="middle"
-            android:divider="@drawable/empty_tall_divider"
-            android:id="@+id/ChatLayout"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:orientation="horizontal">
+            android:background="@drawable/schedilestroke"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Общение"
+                android:textColor="@color/white"
+                android:textSize="40sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </LinearLayout>
-    </ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- TODO: Update blank fragment layout -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/mainbutton"
+            android:fillViewport="true"
+            >
+            <LinearLayout
+                android:showDividers="middle"
+                android:divider="@drawable/empty_tall_divider"
+                android:id="@+id/ChatLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 </FrameLayout>

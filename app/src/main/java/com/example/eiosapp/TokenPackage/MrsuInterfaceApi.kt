@@ -1,10 +1,12 @@
 package com.example.eiosapp.TokenPackage
 
+import com.example.eiosapp.MessagerPackage.ForumMessage
 import com.example.eiosapp.StudentPackage.Student
 import com.example.eiosapp.StudentRatingPlan.StudentRatingPlan
 import com.example.eiosapp.StudentSemesterPackage.StudentSemester
 import com.example.eiosapp.TimeTablePackage.StudentTimeTable
 import com.example.eiosapp.UserPackage.User
+import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -28,11 +30,23 @@ interface MrsuInterfaceApi {
         @Query ("id") id: Int)
     : StudentRatingPlan
 
+    @GET("v1/ForumMessage")
+    suspend fun getForumMessage(
+        @Header ("Authorization") authorization: String,
+        @Query ("disciplineId") id: Int)
+            : List<ForumMessage>
+
     @GET ("v1/StudentTimeTable")
     suspend fun getStudentTimeTable(
         @Header ("Authorization") authorization: String,
         @Query("date") date: String)
     : List<StudentTimeTable>
+
+    @DELETE("v1/ForumMessage")
+    suspend fun deleteForumMessage(
+        @Header ("Authorization") authorization: String,
+        @Query ("id") id: Int
+    ): Unit
 
     @FormUrlEncoded
     @POST("OAuth/Token")
@@ -43,6 +57,14 @@ interface MrsuInterfaceApi {
         @Field("client_id") clientId: String = "8",
         @Field("client_secret") clientSecret: String = "qweasd"
     ): Token
+
+    @FormUrlEncoded
+    @POST("v1/ForumMessage")
+    suspend fun sendForumMessage(
+        @Header ("Authorization") authorization: String,
+        @Query ("disciplineId") id: Int,
+        @Field ("Text") text: String)
+            : ForumMessage
 
     @FormUrlEncoded
     @POST("OAuth/Token")
