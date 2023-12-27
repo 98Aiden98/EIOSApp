@@ -8,6 +8,8 @@ import com.example.eiosapp.StudentRatingPlan.StudentRatingPlan
 import com.example.eiosapp.StudentSemesterPackage.StudentSemester
 import com.example.eiosapp.TimeTablePackage.StudentTimeTable
 import com.example.eiosapp.UserPackage.User
+import com.example.sus.activity.logic.auth.retrofit.dto.Event
+import com.example.sus.activity.logic.auth.retrofit.dto.EventInfo
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
@@ -35,6 +37,8 @@ object SharedPrefManager {
     private const val STUDENT_RATINGPLAN = "student_ratingplan"
     private const val FORUM_MESSAGE = "forum_message"
     private const val EXPIRATION_TIME = "expiration_time"
+    private const val EVENTS = "events"
+    private const val EVENT_DATA = "event_data"
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var instance: SharedPrefManager
@@ -171,6 +175,56 @@ object SharedPrefManager {
     fun getStudentData(): Student? {
         val jsonStudentData = sharedPreferences.getString(STUDENT_DATA, null)
         return Gson().fromJson(jsonStudentData, Student::class.java)
+    }
+
+    fun saveEvents(eventInfoList: List<EventInfo>) {
+        val jsonEvents = Gson().toJson(eventInfoList)
+        sharedPreferences.edit().apply {
+            putString(EVENTS, jsonEvents)
+            apply()
+        }
+    }
+
+    fun saveEvent(event: Event) {
+        val jsonEventData = Gson().toJson(event)
+        sharedPreferences.edit().apply {
+            putString(EVENT_DATA, jsonEventData)
+            apply()
+        }
+    }
+
+    fun refreshEventUsingRefreshToken(eventid: String, callback: (Event) -> Unit) {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+
+                val refreshedEvent = userApi.getEventById("Bearer ${getAccessToken()}", eventid)
+                saveEvent(refreshedEvent)
+                callback(refreshedEvent)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun refreshAllEventUsingRefreshToken(callback: (List <EventInfo>) -> Unit) {
+        val BASE_URL_USER = "https://papi.mrsu.ru"
+        val userApi = createRetrofitApi(BASE_URL_USER)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                checkTokenExpiration()
+                Log.d("Check_events_1", getAccessToken().toString())
+                val refreshedEvents = userApi.getEvents("Bearer ${getAccessToken()}")
+                Log.d("Check_events_2", "123")
+                saveEvents(refreshedEvents)
+                Log.d("Check_events_3", "123")
+                callback(refreshedEvents)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     fun deleteForumMessage(id: Int, callback: (Unit) -> Unit) {

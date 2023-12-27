@@ -1,11 +1,13 @@
 package com.example.eiosapp.LayoutsScripts
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.eiosapp.R
+import com.example.eiosapp.TokenPackage.SharedPrefManager
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,7 +37,16 @@ class chat : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chat, container, false)
+        SharedPrefManager.refreshDataUsingRefreshToken()
+        val view: View = inflater.inflate(R.layout.fragment_chat, container, false)
+
+        val button = view.findViewById<View>(R.id.eventsButton)
+        button.setOnClickListener()
+        {
+            val intent = Intent(context, all_events::class.java)
+            startActivity(intent)
+        }
+        return view
     }
 
     companion object {

@@ -18,8 +18,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ID">
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="@drawable/mrsu_dark_bg_icon_bw"
+            app:layout_constraintBottom_toTopOf="@+id/eventsButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </ImageView>
+
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button1"
+            android:id="@+id/eventsButton"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@drawable/slidemenubutton"
@@ -27,13 +40,14 @@
             android:text="События"
             android:textColor="@color/white"
             android:textSize="17dp"
-            app:layout_constraintBottom_toTopOf="@+id/button2"
+            app:layout_constraintBottom_toTopOf="@+id/testsButton"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></androidx.appcompat.widget.AppCompatButton>
+            app:layout_constraintTop_toBottomOf="@+id/imageView"></androidx.appcompat.widget.AppCompatButton>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button2"
+            android:id="@+id/testsButton"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@drawable/slidemenubutton"
@@ -41,15 +55,15 @@
             android:text="Тесты"
             android:textColor="@color/white"
             android:textSize="17dp"
-            app:layout_constraintBottom_toTopOf="@+id/button3"
+            app:layout_constraintBottom_toTopOf="@+id/oprosButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button1">
+            app:layout_constraintTop_toBottomOf="@+id/eventsButton">
 
         </androidx.appcompat.widget.AppCompatButton>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button3"
+            android:id="@+id/oprosButton"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@drawable/slidemenubutton"
@@ -57,26 +71,26 @@
             android:text="Опросы"
             android:textColor="@color/white"
             android:textSize="17dp"
-            app:layout_constraintBottom_toTopOf="@+id/button4"
+            app:layout_constraintBottom_toTopOf="@+id/exitButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button2">
+            app:layout_constraintTop_toBottomOf="@+id/testsButton">
 
         </androidx.appcompat.widget.AppCompatButton>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button4"
+            android:id="@+id/exitButton"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@drawable/slidemenubutton"
             android:gravity="center"
-            android:text="Заявки"
+            android:text="Выход"
             android:textColor="@color/white"
             android:textSize="17dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button3">
+            app:layout_constraintTop_toBottomOf="@+id/oprosButton">
 
         </androidx.appcompat.widget.AppCompatButton>
 

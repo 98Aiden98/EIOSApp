@@ -6,6 +6,8 @@ import com.example.eiosapp.StudentRatingPlan.StudentRatingPlan
 import com.example.eiosapp.StudentSemesterPackage.StudentSemester
 import com.example.eiosapp.TimeTablePackage.StudentTimeTable
 import com.example.eiosapp.UserPackage.User
+import com.example.sus.activity.logic.auth.retrofit.dto.Event
+import com.example.sus.activity.logic.auth.retrofit.dto.EventInfo
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -35,6 +37,17 @@ interface MrsuInterfaceApi {
         @Header ("Authorization") authorization: String,
         @Query ("disciplineId") id: Int)
             : List<ForumMessage>
+
+    @GET("v1/Event")
+    suspend fun getEventById(
+        @Header("Authorization") authorization: String,
+        @Query("eventid") eventId: String
+    ): Event
+
+    @GET("v1/Events")
+    suspend fun getEvents(
+        @Header("Authorization") authorization: String,
+    ): List<EventInfo>
 
     @GET ("v1/StudentTimeTable")
     suspend fun getStudentTimeTable(

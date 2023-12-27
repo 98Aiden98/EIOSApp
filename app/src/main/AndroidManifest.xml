@@ -40,6 +40,16 @@
             android:exported="false">
 
         </activity>
+        <activity
+            android:name=".LayoutsScripts.all_events"
+            android:exported="false">
+
+        </activity>
+        <activity
+            android:name=".LayoutsScripts.event_description"
+            android:exported="false">
+
+        </activity>
     </application>
 
 </manifest>
